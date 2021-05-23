@@ -2,8 +2,13 @@ const Item = require("../models/item.model");
 
 const findItems = () => Item.find();
 
-const createItem = (item) => {
-  const newItem = new Item(item);
+const createItem = (item, itemImage) => {
+  const newItem = new Item({
+    name: item.name,
+    type: item.type,
+    timeToPrep: item.timeToPrep,
+    itemImage,
+  });
   return newItem.save();
 };
 

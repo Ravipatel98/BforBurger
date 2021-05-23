@@ -2,7 +2,7 @@ const itemDao = require("../daos/item.dao");
 
 const createItem = async (req, res) => {
   try {
-    const data = await itemDao.createItem(req.body);
+    const data = await itemDao.createItem(req.body, req.file.path);
     res.status(200).json({ status: "Success", data });
   } catch (error) {
     console.error(error.message);

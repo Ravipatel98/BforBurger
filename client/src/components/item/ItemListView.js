@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import Item from "./Item";
+import "./Item.css";
 import { loadItems } from "../../redux/actions/itemActions";
 
 const ItemListView = (props) => {
   const [items, setItems] = useState([]);
+  const [search, setSearch] = useState("");
   const loadItems = async () => {
     try {
       const response = await props.loadItems();
@@ -21,32 +24,37 @@ const ItemListView = (props) => {
   }, []);
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Item Name</th>
-            <th>Type</th>
-            <th>Time to prep</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.length > 0 ? (
-            items.map((task, index) => (
-              <tr key={task.id}>
-                <td>{index + 1}</td>
-                <td>{task.name}</td>
-                <td>{task.type}</td>
-                <td>{task.timeToPrep}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4">Great! There is nothing to work</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <input
+        type="text"
+        placeholder="Search..."
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      {items.length > 0 ? (
+        items
+          .filter((item) => {
+            if (search === "") {
+              return item;
+            } else if (
+              item.name.toLowerCase().includes(search.toLocaleLowerCase())
+            ) {
+              return item;
+            } else if (
+              item.type.toLowerCase().includes(search.toLocaleLowerCase())
+            ) {
+              return item;
+            }
+          })
+          .map((task, index) => (
+            <Item
+              key={index}
+              imageUrl={`http://localhost:5000/${task.itemImage}`}
+              name={task.name}
+              type={task.type}
+            />
+          ))
+      ) : (
+        <h2>Great! There is nothing to work</h2>
+      )}
     </>
   );
 };
