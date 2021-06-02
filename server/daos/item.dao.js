@@ -14,11 +14,12 @@ const createItem = (item, itemImage) => {
 
 const findItemById = (id) => Item.findById(id);
 
-const updateItem = (id, item) => {
+const updateItem = (id, item, itemImage) => {
   const updatedItem = {
     name: item.name,
     type: item.type,
     timeToPrep: item.timeToPrep,
+    itemImage,
   };
   return Item.findByIdAndUpdate(id, updatedItem, {
     useFindAndModify: false,

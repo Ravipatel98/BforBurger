@@ -25,6 +25,7 @@ const ItemListView = (props) => {
   return (
     <>
       <input
+        className="item-searchbar"
         type="text"
         placeholder="Search..."
         onChange={(e) => setSearch(e.target.value)}

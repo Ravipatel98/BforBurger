@@ -35,9 +35,14 @@ const findItemById = async (req, res) => {
 
 const updateItem = async (req, res) => {
   try {
-    const data = await itemDao.findItemById(req.params.id);
+    const data = await itemDao.findItemById(req.body._id);
     if (!data) return res.status(404).json("Not found!");
-    const item = await itemDao.updateItem(req.params.id, req.body);
+    let item = {};
+    if (req.file) {
+      item = await itemDao.updateItem(req.body._id, req.body, req.file.path);
+    } else {
+      item = await itemDao.updateItem(req.body._id, req.body, data.itemImage);
+    }
     res.status(200).json({ status: "Success", data: item });
   } catch (error) {
     console.error(error.message);

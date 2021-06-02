@@ -7,6 +7,9 @@ const itemReducer = (state = initialState, action) => {
     case types.LOAD_ITEMS:
       newState.items = action.items;
       return newState;
+    case types.UPDATE_ITEM_DETAILS:
+      newState.updateItemDetails = action.item;
+      return newState;
     default:
       return newState;
   }
