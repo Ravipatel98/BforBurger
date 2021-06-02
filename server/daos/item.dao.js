@@ -3,13 +3,13 @@ const Item = require("../models/item.model");
 const findItems = () => Item.find();
 
 const createItem = (item, itemImage) => {
-  const newItem = new Item({
-    name: item.name,
-    type: item.type,
-    timeToPrep: item.timeToPrep,
-    itemImage,
-  });
-  return newItem.save();
+    const newItem = new Item({
+        name: item.name,
+        type: item.type,
+        timeToPrep: item.timeToPrep,
+        itemImage,
+    });
+    return newItem.save();
 };
 
 const findItemById = (id) => Item.findById(id);
@@ -29,11 +29,11 @@ const updateItem = (id, item, itemImage) => {
 const deleteItem = (id) => Item.findByIdAndDelete(id);
 
 const itemDao = {
-  findItems,
-  createItem,
-  findItemById,
-  updateItem,
-  deleteItem,
+    findItems,
+    createItem,
+    findItemById,
+    updateItem,
+    deleteItem,
 };
 
 module.exports = itemDao;
