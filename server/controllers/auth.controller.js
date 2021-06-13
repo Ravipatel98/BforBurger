@@ -3,6 +3,8 @@ const passportUtils = require("../utils/passportUtils");
 
 const registerUser = async (req, res) => {
   console.log(req.body);
+  const data = await authDao.findUserByName(req.body.userName);
+  if (data) res.status(401).json({ success: false });
   const saltHash = passportUtils.genPassword(req.body.password);
   const salt = saltHash.salt;
   const hash = saltHash.hash;

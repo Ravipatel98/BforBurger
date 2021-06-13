@@ -50,6 +50,8 @@ const ItemListView = (props) => {
               key={index}
               imageUrl={`http://localhost:5000/${task.itemImage}`}
               name={task.name}
+              price={task.price}
+              id={task._id}
               type={task.type}
             />
           ))

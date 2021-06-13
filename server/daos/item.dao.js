@@ -6,6 +6,7 @@ const createItem = (item, itemImage) => {
   const newItem = new Item({
     name: item.name,
     type: item.type,
+    price: item.price,
     timeToPrep: item.timeToPrep,
     itemImage,
   });
@@ -18,6 +19,7 @@ const updateItem = (id, item, itemImage) => {
   const updatedItem = {
     name: item.name,
     type: item.type,
+    price: item.price,
     timeToPrep: item.timeToPrep,
     itemImage,
   };

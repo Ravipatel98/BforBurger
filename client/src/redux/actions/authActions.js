@@ -21,13 +21,22 @@ export const logOutUserSuccess = () => {
   };
 };
 
+export const setLoggedInUserSuccess = (user) => {
+  return {
+    type: types.SET_LOGGED_IN_USER,
+    user,
+  };
+};
+
 export const registerUser = (userDetails) => {
   return async (dispatch) => {
     try {
       console.log("action", userDetails);
       const user = await authApi.registerUser(userDetails);
-      dispatch(registerUserSuccess(user));
-      return user;
+      if (user.status === 200) {
+        dispatch(registerUserSuccess(user));
+        return user;
+      }
     } catch (error) {
       return error;
     }
@@ -39,8 +48,10 @@ export const loginUser = (userDetails) => {
     try {
       console.log("action", userDetails);
       const user = await authApi.loginUser(userDetails);
-      dispatch(loginUserSuccess(user));
-      return user;
+      if (user.status === 200) {
+        dispatch(loginUserSuccess(user));
+        return user;
+      }
     } catch (error) {
       return error;
     }
@@ -53,6 +64,17 @@ export const logOutUser = () => {
       const user = {};
       dispatch(logOutUserSuccess());
       return user;
+    } catch (error) {
+      return error;
+    }
+  };
+};
+
+export const setLoggedInUser = (userDetails) => {
+  return (dispatch) => {
+    try {
+      dispatch(setLoggedInUserSuccess(userDetails));
+      return userDetails;
     } catch (error) {
       return error;
     }

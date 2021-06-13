@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import "./auth.css";
 import { Link, useHistory } from "react-router-dom";
 import { registerUser } from "../../redux/actions/authActions";
+import Swal from "sweetalert2";
 
 const Register = ({ registerUser }) => {
   const [userDetails, setUserDetails] = useState({
@@ -35,7 +36,26 @@ const Register = ({ registerUser }) => {
     e.preventDefault();
     const response = await registerUser(userDetails);
     console.log(response);
-    history.push("/items");
+    if (response && response.user) {
+      localStorage.setItem("loggedInUser", JSON.stringify(response));
+      localStorage.setItem("token", response.data.token);
+      history.push("/items");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "User registered successfully!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "User already exists!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
     resetForm();
   };
 
