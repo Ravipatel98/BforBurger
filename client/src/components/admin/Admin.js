@@ -3,11 +3,23 @@ import { connect } from "react-redux";
 import "./Admin.css";
 import ItemAdminView from "./ItemAdminView";
 import UserAdminView from "./UserAdminView";
+import OrderAdminView from "./OrderAdminView";
 import { loadItems, deleteItem } from "../../redux/actions/itemActions";
+import { loadUsers, deleteUser } from "../../redux/actions/userActions";
+import { loadOrders } from "../../redux/actions/orderActions";
+import Swal from "sweetalert2";
 
-const Admin = ({ loadItems, deleteItem }) => {
+const Admin = ({
+  loadItems,
+  deleteItem,
+  loadUsers,
+  deleteUser,
+  loadOrders,
+}) => {
   const [toggleState, setToggleState] = useState(1);
   const [items, setItems] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -15,17 +27,61 @@ const Admin = ({ loadItems, deleteItem }) => {
       setItems(fetchedItems.data.data);
     };
     fetchItems();
-  }, [loadItems, items]);
+  }, [loadItems]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const fetchedUsers = await loadUsers();
+      setUsers(fetchedUsers.data.data);
+    };
+    fetchUsers();
+  }, [loadUsers]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const fetchedOrders = await loadOrders();
+      setOrders(fetchedOrders.data.data);
+      console.log(fetchedOrders.data.data);
+    };
+    fetchOrders();
+  }, [loadOrders]);
 
   const toggleTab = (index) => {
     setToggleState(index);
   };
 
-  const removeItem = (id) => {
-    deleteItem(id).then((res) => {
-      console.log(res);
-      loadItems();
+  const removeItem = async (id) => {
+    const item = await deleteItem(id);
+    console.log(item);
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Item removed successfully!",
+      showConfirmButton: false,
+      timer: 2000,
     });
+    const items = await loadItems();
+    setItems(items);
+    setTimeout(() => {
+      window.location.reload(false);
+    }, 0);
+  };
+
+  const removeUser = async (id) => {
+    const user = await deleteUser(id);
+    console.log(user);
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "User removed successfully!",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    const users = await loadItems();
+    setUsers(users);
+    setTimeout(() => {
+      window.location.reload(false);
+    }, 1);
   };
 
   return (
@@ -47,7 +103,7 @@ const Admin = ({ loadItems, deleteItem }) => {
           className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
           onClick={() => toggleTab(3)}
         >
-          Report
+          Order
         </button>
       </div>
 
@@ -61,22 +117,17 @@ const Admin = ({ loadItems, deleteItem }) => {
         <div
           className={toggleState === 2 ? "content  active-content" : "content"}
         >
-          <UserAdminView />
+          <UserAdminView
+            users={users}
+            removeUser={removeUser}
+            loadUsers={loadUsers}
+          />
         </div>
 
         <div
           className={toggleState === 3 ? "content  active-content" : "content"}
         >
-          <h2>Content 3</h2>
-          <hr />
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos sed
-            nostrum rerum laudantium totam unde adipisci incidunt modi alias!
-            Accusamus in quia odit aspernatur provident et ad vel distinctio
-            recusandae totam quidem repudiandae omnis veritatis nostrum
-            laboriosam architecto optio rem, dignissimos voluptatum beatae
-            aperiam voluptatem atque. Beatae rerum dolores sunt.
-          </p>
+          <OrderAdminView orders={orders} />
         </div>
       </div>
     </div>
@@ -87,6 +138,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loadItems: () => dispatch(loadItems()),
     deleteItem: (id) => dispatch(deleteItem(id)),
+    loadUsers: () => dispatch(loadUsers()),
+    deleteUser: (id) => dispatch(deleteUser(id)),
+    loadOrders: () => dispatch(loadOrders()),
   };
 };
 

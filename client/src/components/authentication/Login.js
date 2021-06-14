@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./auth.css";
 import { Link, useHistory } from "react-router-dom";
 import { loginUser } from "../../redux/actions/authActions";
-import axios from "axios";
+import Swal from "sweetalert2";
 
 const Login = ({ loginUser }) => {
   const [userDetails, setUserDetails] = useState({
@@ -31,21 +31,27 @@ const Login = ({ loginUser }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const response = await loginUser(userDetails);
-    console.log(response.data);
-    localStorage.setItem("token", response.data.token);
-    history.push("/items");
+    if (response) {
+      localStorage.setItem("loggedInUser", JSON.stringify(response));
+      localStorage.setItem("token", response.data.token);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Logged In successfully!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      history.push("/items");
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Invalid Username or Password",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
     resetForm();
-  };
-
-  const visitProtected = async (e) => {
-    e.preventDefault();
-    // const config = {
-    //   headers: {
-    //     Authorization: localStorage.getItem("token"),
-    //   },
-    // };
-    const response = await axios.get("http://localhost:5000/auth/protected");
-    console.log(response);
   };
 
   return (
@@ -76,9 +82,6 @@ const Login = ({ loginUser }) => {
         </div>
         <button type="submit" className="btn-submit">
           Log In
-        </button>
-        <button type="button" className="btn-submit" onClick={visitProtected}>
-          Protected
         </button>
         <div className="signup_link">
           Already have an account? <Link to="/signup">Signup</Link>

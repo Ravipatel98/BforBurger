@@ -30,9 +30,13 @@ mongoose.set("returnOriginal", false);
 
 const itemRouter = require("./routes/item");
 const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
+const orderRouter = require("./routes/order");
 
 app.use("/item", itemRouter);
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
+app.use("/order", orderRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

@@ -1,7 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
+import { addToCart } from "../../redux/actions/itemActions";
 import "./Item.css";
 
-const Item = ({ imageUrl, name, type }) => {
+const Item = ({ id, imageUrl, name, price, addToCart, type }) => {
+  console.log("id", id);
   return (
     <div className="card-container">
       <div className="image-container">
@@ -12,14 +15,22 @@ const Item = ({ imageUrl, name, type }) => {
           <h3>{name}</h3>
         </div>
         <div className="card-body">
-          <p>{type}</p>
+          <h5>{type}</h5>
+          <br />
+          <p>$ {price}</p>
         </div>
       </div>
       <div className="btn">
-        <button>View More</button>
+        <button onClick={() => addToCart(id)}>Add to cart</button>
       </div>
     </div>
   );
 };
 
-export default Item;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (id) => dispatch(addToCart(id)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Item);

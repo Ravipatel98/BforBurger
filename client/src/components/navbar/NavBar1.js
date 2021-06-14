@@ -1,18 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { FaBars, FaShoppingCart } from "react-icons/fa";
 import "./navbar.css";
+import { setLoggedInUser } from "../../redux/actions/authActions";
 import { logOutUser } from "../../redux/actions/authActions";
+import Swal from "sweetalert2";
 
-const NavBar1 = ({ loggedInUser, logOutUser }) => {
+const NavBar1 = ({ loggedInUser, logOutUser, cart, setLoggedInUser }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const history = useHistory();
+
+  useEffect(() => {
+    let count = 0;
+    cart.forEach((item) => {
+      count += item.qty;
+    });
+    console.log(loggedInUser);
+    setCartCount(count);
+  }, [cart, cartCount]);
+
+  const logInUser = async () => {
+    const user = await setLoggedInUser(
+      JSON.parse(localStorage.getItem("loggedInUser"))
+    );
+    console.log(user);
+  };
+
+  useEffect(() => {
+    logInUser();
+  }, []);
+
   const handleLogOut = () => {
     localStorage.setItem("token", "");
     logOutUser();
     console.log(loggedInUser);
     history.push("/");
+    if (localStorage.getItem("token") === "") {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Successfully logged out!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Something went wrong",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
   };
   return (
     <div className="header">
@@ -31,12 +72,19 @@ const NavBar1 = ({ loggedInUser, logOutUser }) => {
           <Link to="/items" className="links">
             <li>Items</li>
           </Link>
-          <Link to="/items" className="links">
-            <li>Kitchen</li>
-          </Link>
-          <Link to="/admin" className="links">
-            <li>Admin</li>
-          </Link>
+          {JSON.stringify(loggedInUser) !== "{}" &&
+            (loggedInUser.data.user.role.toLowerCase() === "admin" ||
+              loggedInUser.data.user.role.toLowerCase() === "staff") && (
+              <Link to="/kitchen" className="links">
+                <li>Kitchen</li>
+              </Link>
+            )}
+          {JSON.stringify(loggedInUser) !== "{}" &&
+            loggedInUser.data.user.role.toLowerCase() === "admin" && (
+              <Link to="/admin" className="links">
+                <li>Admin</li>
+              </Link>
+            )}
         </ul>
       </nav>
       <ul className="nav__links__auth">
@@ -58,7 +106,14 @@ const NavBar1 = ({ loggedInUser, logOutUser }) => {
           </>
         )}
       </ul>
-      <FaShoppingCart size={23} className="cart" />
+      <div>
+        {JSON.stringify(loggedInUser) !== "{}" && (
+          <Link to="/cart" className="links">
+            <FaShoppingCart size={23} className="cart" />
+            <span className="cartCount">{cartCount}</span>
+          </Link>
+        )}
+      </div>
       <FaBars className="burger" onClick={() => setIsOpen(!isOpen)} />
     </div>
   );
@@ -67,12 +122,14 @@ const NavBar1 = ({ loggedInUser, logOutUser }) => {
 const mapStateToProps = (state) => {
   return {
     loggedInUser: state.authReducer.loggedInUser,
+    cart: state.itemReducer.cart,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     logOutUser: () => dispatch(logOutUser()),
+    setLoggedInUser: (userDetails) => dispatch(setLoggedInUser(userDetails)),
   };
 };
 

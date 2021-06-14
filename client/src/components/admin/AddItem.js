@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { addItem } from "../../redux/actions/itemActions";
 import { Link, useHistory } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const AddItem = ({ addItem }) => {
   const [item, setItem] = useState({
     name: "",
     type: "",
+    price: 0,
     timeToPrep: 0,
   });
   const [file, setFile] = useState([]);
@@ -17,6 +19,7 @@ const AddItem = ({ addItem }) => {
     setItem({
       name: "",
       type: "",
+      price: 0,
       timeToPrep: 0,
     });
     setFile([]);
@@ -39,10 +42,28 @@ const AddItem = ({ addItem }) => {
     const formData = new FormData();
     formData.append("file", file[0]);
     formData.append("name", item.name);
+    formData.append("price", item.price);
     formData.append("type", item.type);
     formData.append("timeToPrep", item.timeToPrep);
     const response = await addItem(formData);
     console.log(response);
+    if (response.status === 200) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Item added successfully!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Something went wrong",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
     history.push("/admin");
     resetForm();
   };
@@ -72,6 +93,17 @@ const AddItem = ({ addItem }) => {
           />
           <span></span>
           <label htmlFor="type">Type</label>
+        </div>
+        <div className="txt_field">
+          <input
+            type="number"
+            name="price"
+            onChange={handleChange}
+            value={item.price}
+            required
+          />
+          <span></span>
+          <label>Price $</label>
         </div>
         <div className="txt_field">
           <input

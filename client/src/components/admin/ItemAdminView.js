@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaPlus, FaPen, FaTrash } from "react-icons/fa";
 import DataTable from "../datatable/DataTable";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { updateItemDetails, loadItems } from "../../redux/actions/itemActions";
+import { updateItemDetails } from "../../redux/actions/itemActions";
 import "./Admin.css";
 
-const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
+const ItemAdminView = ({ items, updateItemDetails, removeItem }) => {
   const [q, setQ] = useState("");
 
   const filterRows = (rows) => {
@@ -25,6 +25,7 @@ const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
       _id: item._id,
       name: item.name,
       type: item.type,
+      price: item.price,
       timeToPrep: item.timeToPrep,
     };
     updateItemDetails(selectedItem);
@@ -51,7 +52,7 @@ const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
             <th>#</th>
             <th>Name</th>
             <th>Type</th>
-            <th>Preparation Time</th>
+            <th>Price $</th>
             <th>Created At</th>
             <th>Updated At</th>
             <th>Actions</th>
@@ -64,7 +65,7 @@ const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
                 <td>{index + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.type}</td>
-                <td>{item.timeToPrep}</td>
+                <td>{item.price}</td>
                 <td>{item.createdAt}</td>
                 <td>{item.updatedAt}</td>
                 <td>
@@ -75,7 +76,7 @@ const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
                     />
                   </Link>
                   <FaTrash
-                    style={{ margin: "3px 5px" }}
+                    style={{ margin: "3px 5px", cursor: "pointer" }}
                     onClick={() => removeItem(item._id)}
                   />
                 </td>
@@ -94,7 +95,6 @@ const ItemAdminView = ({ items, updateItemDetails, loadItems, removeItem }) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loadItems: () => dispatch(loadItems()),
     updateItemDetails: (item) => dispatch(updateItemDetails(item)),
   };
 };

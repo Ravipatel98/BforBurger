@@ -1,0 +1,25 @@
+.header-container {
+  height: 100px;
+  text-align: center;
+  padding: 50px 10px;
+  background-color: #0093e9;
+  background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+  color: white;
+}
+
+.card-body {
+  padding: 30px 20px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.card-body .btn {
+  display: block;
+  color: #fff;
+  text-align: center;
+  background-color: #0093e9;
+  background-image: linear-gradient(160deg, #0093e9 0%, #80d0c7 100%);
+  margin-top: 30px;
+  text-decoration: none;
+  padding-left: 10px 5px;
+}

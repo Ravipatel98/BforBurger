@@ -36,6 +36,35 @@ export const deleteItemSuccess = (id) => {
   };
 };
 
+export const addToCartSuccess = (itemID) => {
+  return {
+    type: types.ADD_TO_CART,
+    id: itemID,
+  };
+};
+
+export const removeFromCartSuccess = (itemID) => {
+  return {
+    type: types.REMOVE_FROM_CART,
+    id: itemID,
+  };
+};
+
+export const adjustItemQtySuccess = (itemID, qty) => {
+  return {
+    type: types.ADJUST_ITEM_QTY,
+    id: itemID,
+    qty,
+  };
+};
+
+export const checkoutSuccess = (order) => {
+  return {
+    type: types.CHECKOUT,
+    order,
+  };
+};
+
 export const loadItems = () => {
   return async (dispatch) => {
     try {
@@ -91,6 +120,36 @@ export const deleteItem = (id) => {
       const item = await itemApi.deleteItem(id);
       dispatch(deleteItemSuccess(item));
       return item;
+    } catch (error) {
+      return error;
+    }
+  };
+};
+
+export const addToCart = (id) => {
+  return (dispatch) => {
+    try {
+      dispatch(addToCartSuccess(id));
+    } catch (error) {
+      return error;
+    }
+  };
+};
+
+export const removeFromCart = (id) => {
+  return (dispatch) => {
+    try {
+      dispatch(removeFromCartSuccess(id));
+    } catch (error) {
+      return error;
+    }
+  };
+};
+
+export const adjustItemQty = (id, qty) => {
+  return (dispatch) => {
+    try {
+      dispatch(adjustItemQtySuccess(id, qty));
     } catch (error) {
       return error;
     }

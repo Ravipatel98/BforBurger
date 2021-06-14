@@ -12,6 +12,10 @@ const authReducer = (state = initialState, action) => {
       return newState;
     case types.LOGOUT_USER_SUCCESS:
       newState.loggedInUser = {};
+      localStorage.setItem("loggedInUser", "");
+      return newState;
+    case types.SET_LOGGED_IN_USER:
+      newState.loggedInUser = action.user;
       return newState;
     default:
       return newState;
